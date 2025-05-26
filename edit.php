@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $param == "update") {
         header("Location: index.php"); exit;
     } elseif ($success) {
         echo "ℹ️ ไม่มีข้อมูลเปลี่ยนแปลง (ค่าที่ส่งเข้าเหมือนเดิม)";
+        header("Location: index.php"); exit;
     } else {
         $error = $stmt->errorInfo();
         echo "❌ เกิดข้อผิดพลาด: " . $error[2];

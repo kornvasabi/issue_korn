@@ -3,16 +3,19 @@ require 'db.php';
 
 $types = ['ระบบ QR-code-old', 'ระบบ Qr-code-new', 'ระบบ AX', 'ระบบ อื่นๆ'];
 
-$id = $_POST['id'];
+$id = (isset($_POST['id']) ? $_POST['id']:"");
 $stmt = $pdo->prepare("SELECT * FROM issues WHERE id = ?");
 $stmt->execute([$id]);
 $issue = $stmt->fetch();
 
-if (!$issue) exit("ไม่พบข้อมูล");
+// if (!$issue) exit("ไม่พบข้อมูล");
 
 $param = (isset($_POST['param']) ? $_POST['param']:"");
+
+// echo $param; exit;
 /*Update to database*/
-if ($_SERVER["REQUEST_METHOD"] === "POST" and $param == "edit") {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $param == "update") {
+
     $title = $_POST['title'];
     $desc = $_POST['description'];
     $type = $_POST['type'];
@@ -27,9 +30,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and $param == "edit") {
     }
 
     $stmt = $pdo->prepare("UPDATE issues SET title = ?, description = ?, type = ?, image = ? WHERE id = ?");
-    $stmt->execute([$title, $desc, $type, $imageName, $id]);
+    $success = $stmt->execute([$title, $desc, $type, $imageName, $id]);
 
-    header("Location: index.php");
+    if ($success && $stmt->rowCount() > 0) {
+        header("Location: index.php"); exit;
+    } elseif ($success) {
+        echo "ℹ️ ไม่มีข้อมูลเปลี่ยนแปลง (ค่าที่ส่งเข้าเหมือนเดิม)";
+    } else {
+        $error = $stmt->errorInfo();
+        echo "❌ เกิดข้อผิดพลาด: " . $error[2];
+    }
     exit;
 }
 ?>
@@ -67,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and $param == "edit") {
         <div class="mb-3">
             <label class="form-label">แนบภาพใหม่</label>
             <input type="file" name="image" class="form-control">
+            
             <?php if ($issue['image']): ?>
                 <div class="mt-2">
                     <p>ภาพปัจจุบัน:</p>
@@ -74,8 +85,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" and $param == "edit") {
                 </div>
             <?php endif; ?>
         </div>
+        
         <button type="submit" class="btn btn-primary">อัปเดต</button>
         <input type="hidden" name="param" value="update">
+        <input type="hidden" name="id" value="<?= htmlspecialchars($issue['id']) ?>">
         <a href="index.php" class="btn btn-secondary">ยกเลิก</a>
     </form>
 </div>

@@ -86,7 +86,10 @@ $issues = $stmt->fetchAll();
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a class="btn btn-sm btn-warning" href="edit.php?id=<?= $row['id'] ?>">แก้ไข</a>
+                        <form action="edit.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                            <button type="submit" class="btn btn-sm btn-warning">แก้ไข</button>
+                        </form>
                     </td>
                     <td>
                         <a class="btn btn-sm btn-danger" href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('ลบจริงหรือไม่?')">ลบ</a>

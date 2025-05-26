@@ -3,14 +3,16 @@ require 'db.php';
 
 $types = ['ระบบ QR-code-old', 'ระบบ Qr-code-new', 'ระบบ AX', 'ระบบ อื่นๆ'];
 
-$id = $_GET['id'];
+$id = $_POST['id'];
 $stmt = $pdo->prepare("SELECT * FROM issues WHERE id = ?");
 $stmt->execute([$id]);
 $issue = $stmt->fetch();
 
 if (!$issue) exit("ไม่พบข้อมูล");
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+$param = (isset($_POST['param']) ? $_POST['param']:"");
+/*Update to database*/
+if ($_SERVER["REQUEST_METHOD"] === "POST" and $param == "edit") {
     $title = $_POST['title'];
     $desc = $_POST['description'];
     $type = $_POST['type'];
@@ -73,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php endif; ?>
         </div>
         <button type="submit" class="btn btn-primary">อัปเดต</button>
+        <input type="hidden" name="param" value="update">
         <a href="index.php" class="btn btn-secondary">ยกเลิก</a>
     </form>
 </div>

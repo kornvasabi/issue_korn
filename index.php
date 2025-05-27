@@ -92,7 +92,7 @@ $issues = $stmt->fetchAll();
                             -
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td width="80">
                         <form action="edit.php" method="POST" style="display:inline;">
                             <input type="hidden" name="id" value="<?= $row['id'] ?>">
                             <button type="submit" class="btn btn-sm btn-warning">แก้ไข</button>
@@ -121,7 +121,7 @@ $issues = $stmt->fetchAll();
     document.querySelectorAll("a").forEach(link => {
         link.addEventListener("click", function (e) {
             const href = this.getAttribute("href");
-            if (href && href !== "#" && !href.startsWith("javascript:")) {
+            if (href && href !== "#" && !href.startsWith("javascript:") && target !== "_blank") {
                 document.getElementById("loadingSpinner").style.display = "block";
             }
         });

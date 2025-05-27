@@ -35,6 +35,13 @@ $issues = $stmt->fetchAll();
     <link rel="icon" type="image/x-icon" href="img/web_tab_icon.png">
 </head>
 <body>
+<div id="loadingSpinner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+     background: rgba(255, 255, 255, 0.7); z-index: 9999; text-align: center; padding-top: 200px;">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">กำลังโหลด...</span>
+    </div>
+    <div class="mt-3">กำลังโหลดข้อมูล...</div>
+</div>
 <div class="container mt-5">
     <h1 class="mb-4">📋 ระบบจัดการปัญหา</h1>
 
@@ -101,3 +108,22 @@ $issues = $stmt->fetchAll();
 </div>
 </body>
 </html>
+
+<script>
+    // เมื่อ submit form ใด ๆ (เช่น ฟอร์มค้นหา)
+    document.querySelectorAll("form").forEach(form => {
+        form.addEventListener("submit", function () {
+            document.getElementById("loadingSpinner").style.display = "block";
+        });
+    });
+
+    // เมื่อคลิกลิงก์ <a> ที่เปลี่ยนหน้า (ที่ไม่ใช้ #)
+    document.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", function (e) {
+            const href = this.getAttribute("href");
+            if (href && href !== "#" && !href.startsWith("javascript:")) {
+                document.getElementById("loadingSpinner").style.display = "block";
+            }
+        });
+    });
+</script>
